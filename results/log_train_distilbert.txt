@@ -1,0 +1,30 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[distilbert] distilbert-base-uncased on cuda: train 47,311 (4,301 pos), val 20,896, max_length 512, batch 32x1, lr 5e-05, focal=False
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|##########| 100/100 [00:00<00:00, 3851.55it/s]
+[transformers] [1mDistilBertForSequenceClassification LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     | 
+------------------------+------------+-
+vocab_projector.bias    | UNEXPECTED | 
+vocab_layer_norm.weight | UNEXPECTED | 
+vocab_transform.bias    | UNEXPECTED | 
+vocab_transform.weight  | UNEXPECTED | 
+vocab_layer_norm.bias   | UNEXPECTED | 
+classifier.bias         | MISSING    | 
+pre_classifier.weight   | MISSING    | 
+pre_classifier.bias     | MISSING    | 
+classifier.weight       | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[distilbert] epoch 1 batch 500/1478 loss 0.4193 (270s)
+[distilbert] epoch 1 batch 1000/1478 loss 0.3982 (533s)
+[W1014 01:37:57.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 171966464 bytes (free: 0, total: 6441926656).
+[distilbert] epoch 1: loss 0.3857  val PR-AUC 0.2402
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|##########| 1/1 [00:00<00:00,  3.14it/s]Writing model shards: 100%|##########| 1/1 [00:00<00:00,  3.13it/s]
+[distilbert] epoch 2 batch 500/1478 loss 0.3718 (1044s)
+[distilbert] epoch 2 batch 1000/1478 loss 0.3626 (1241s)
+[distilbert] epoch 2: loss 0.3573  val PR-AUC 0.1878
+[distilbert] early stop (no val PR-AUC gain)
+Loading weights:   0%|          | 0/104 [00:00<?, ?it/s]Loading weights: 100%|##########| 104/104 [00:00<00:00, 7976.15it/s]
+[distilbert] done: best val PR-AUC 0.2402, 24.2 min, peak VRAM 4220 MB

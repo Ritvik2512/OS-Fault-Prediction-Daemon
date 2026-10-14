@@ -1,0 +1,29 @@
+{
+  "name": "electra",
+  "type": "transformer",
+  "hf": "models/pretrained/electra-base-discriminator",
+  "variant": "default",
+  "focal": false,
+  "max_length": 512,
+  "rle": true,
+  "batch": 8,
+  "accum": 4,
+  "lr": 2e-05,
+  "pos_weight": 2.0,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.39739206214622796,
+      "val_pr_auc": 0.21702827604644231
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.36527935041276577,
+      "val_pr_auc": 0.16231261317832096
+    }
+  ],
+  "best_val_pr_auc": 0.21702827604644231,
+  "train_seconds": 1987.5,
+  "peak_vram_mb": 3577.9,
+  "train_windows": 47311
+}

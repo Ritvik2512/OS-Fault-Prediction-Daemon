@@ -1,0 +1,128 @@
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|##########| 201/201 [00:00<00:00, 11825.22it/s]
+LLM warmed up
+Simulated live stream from held-out BGL logs: 1,899 lines at 0 lines/s
+model=electra  tau=0.9524  N=1  cooldown=0 windows  mode=eval
+
+[    0] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    1] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    2] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    3] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    4] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    5] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    6] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    7] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    8] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[    9] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   10] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   11] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   12] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   13] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   14] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   15] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   16] conf=0.483  [eval: alert_in_window=False alert_within_K=False]
+[   17] conf=0.579  [eval: alert_in_window=False alert_within_K=False]
+[   18] conf=0.347  [eval: alert_in_window=False alert_within_K=False]
+[   19] conf=0.203  [eval: alert_in_window=False alert_within_K=False]
+[   20] conf=0.280  [eval: alert_in_window=False alert_within_K=False]
+[   21] conf=0.798  [eval: alert_in_window=False alert_within_K=False]
+[   22] conf=0.148  [eval: alert_in_window=False alert_within_K=False]
+[   23] conf=0.094  [eval: alert_in_window=False alert_within_K=False]
+[   24] conf=0.330  [eval: alert_in_window=False alert_within_K=False]
+[   25] conf=0.061  [eval: alert_in_window=False alert_within_K=False]
+[   26] conf=0.739  [eval: alert_in_window=False alert_within_K=False]
+[   27] conf=0.710  [eval: alert_in_window=False alert_within_K=False]
+[   28] conf=0.055  [eval: alert_in_window=False alert_within_K=False]
+[   29] conf=0.765  [eval: alert_in_window=False alert_within_K=False]
+[   30] conf=0.366  [eval: alert_in_window=False alert_within_K=False]
+[   31] conf=0.757  [eval: alert_in_window=False alert_within_K=False]
+[   32] conf=0.424  [eval: alert_in_window=False alert_within_K=False]
+[   33] conf=0.806  [eval: alert_in_window=False alert_within_K=False]
+[   34] conf=0.811  [eval: alert_in_window=False alert_within_K=False]
+[   35] conf=0.791  [eval: alert_in_window=False alert_within_K=False]
+[   36] conf=0.710  [eval: alert_in_window=False alert_within_K=False]
+[   37] conf=0.788  [eval: alert_in_window=False alert_within_K=False]
+[   38] conf=0.788  [eval: alert_in_window=False alert_within_K=False]
+[   39] conf=0.775  [eval: alert_in_window=False alert_within_K=False]
+[   40] conf=0.791  [eval: alert_in_window=False alert_within_K=False]
+[   41] conf=0.788  [eval: alert_in_window=False alert_within_K=False]
+[   42] conf=0.702  [eval: alert_in_window=False alert_within_K=False]
+[   43] conf=0.490  [eval: alert_in_window=False alert_within_K=False]
+[   44] conf=0.141  [eval: alert_in_window=False alert_within_K=False]
+[   45] conf=0.451  [eval: alert_in_window=False alert_within_K=False]
+[   46] conf=0.195  [eval: alert_in_window=False alert_within_K=False]
+[   47] conf=0.404  [eval: alert_in_window=False alert_within_K=False]
+[   48] conf=0.288  [eval: alert_in_window=False alert_within_K=False]
+[   49] conf=0.206  [eval: alert_in_window=False alert_within_K=False]
+[   50] conf=0.418  [eval: alert_in_window=False alert_within_K=False]
+[   51] conf=0.766  [eval: alert_in_window=False alert_within_K=False]
+[   52] conf=0.790  [eval: alert_in_window=False alert_within_K=False]
+[   53] conf=0.770  [eval: alert_in_window=False alert_within_K=False]
+[   54] conf=0.771  [eval: alert_in_window=False alert_within_K=False]
+[   55] conf=0.786  [eval: alert_in_window=False alert_within_K=False]
+[   56] conf=0.174  [eval: alert_in_window=False alert_within_K=False]
+[   57] conf=0.131  [eval: alert_in_window=False alert_within_K=False]
+[   58] conf=0.084  [eval: alert_in_window=False alert_within_K=False]
+[   59] conf=0.774  [eval: alert_in_window=False alert_within_K=False]
+[   60] conf=0.820  [eval: alert_in_window=False alert_within_K=False]
+[   61] conf=0.661  [eval: alert_in_window=False alert_within_K=False]
+[   62] conf=0.803  [eval: alert_in_window=False alert_within_K=False]
+[   63] conf=0.775  [eval: alert_in_window=False alert_within_K=False]
+[   64] conf=0.820  [eval: alert_in_window=False alert_within_K=False]
+[   65] conf=0.803  [eval: alert_in_window=False alert_within_K=False]
+[   66] conf=0.532  [eval: alert_in_window=False alert_within_K=False]
+[   67] conf=0.773  [eval: alert_in_window=False alert_within_K=False]
+[   68] conf=0.812  [eval: alert_in_window=False alert_within_K=False]
+[   69] conf=0.771  [eval: alert_in_window=False alert_within_K=True]
+[   70] conf=0.794  [eval: alert_in_window=False alert_within_K=True]
+[   71] conf=0.981  PRE-FAULT  <-- INCIDENT PREDICTED (windows 71-71)  [eval: alert_in_window=False alert_within_K=True]
+[   72] conf=0.984  PRE-FAULT  [eval: alert_in_window=False alert_within_K=True]
+[   73] conf=0.981  PRE-FAULT  [eval: alert_in_window=False alert_within_K=True]
+[   74] conf=0.917  [eval: alert_in_window=True alert_within_K=False]
+[   75] conf=0.984  PRE-FAULT  <-- INCIDENT PREDICTED (windows 75-75)  [eval: alert_in_window=False alert_within_K=True]
+[   76] conf=0.980  PRE-FAULT  [eval: alert_in_window=False alert_within_K=True]
+[   77] conf=0.930  [eval: alert_in_window=False alert_within_K=True]
+[   78] conf=0.937  [eval: alert_in_window=False alert_within_K=True]
+[   79] conf=0.015  [eval: alert_in_window=False alert_within_K=True]
+[   80] conf=0.237  [eval: alert_in_window=True alert_within_K=True]
+[   81] conf=0.982  PRE-FAULT  <-- INCIDENT PREDICTED (windows 81-81)  [eval: alert_in_window=False alert_within_K=True]
+[   82] conf=0.984  PRE-FAULT  [eval: alert_in_window=False alert_within_K=True]
+[   83] conf=0.975  PRE-FAULT  [eval: alert_in_window=False alert_within_K=True]
+[   84] conf=0.980  PRE-FAULT  [eval: alert_in_window=True alert_within_K=False]
+[   85] conf=0.985  PRE-FAULT  [eval: alert_in_window=False alert_within_K=True]
+[   86] conf=0.386  [eval: alert_in_window=False alert_within_K=True]
+[   87] conf=0.941  [eval: alert_in_window=False alert_within_K=True]
+[   88] conf=0.888  [eval: alert_in_window=False alert_within_K=True]
+[   89] conf=0.006  [eval: alert_in_window=False alert_within_K=True]
+[   90] conf=0.476  [eval: alert_in_window=True alert_within_K=False]
+[   91] conf=0.374  [eval: alert_in_window=False alert_within_K=False]
+[   92] conf=0.205  [eval: alert_in_window=False alert_within_K=False]
+[   93] conf=0.262  [eval: alert_in_window=False alert_within_K=False]
+
+  --- incident card (generated summary, not a verified diagnosis) ---
+  summary   : Repeated kernel error messages indicate potential hardware failure on the node.
+  component : KERNEL
+  severity  : high
+  action    : Run a system reboot and inspect the node for physical damage or issues.
+  windows   : 71-71   llm=3.2s
+  --------------------------------------------------------------------
+
+
+  --- incident card (generated summary, not a verified diagnosis) ---
+  summary   : Repeated memory manager errors indicate potential memory degradation on the node.
+  component : MEMORY
+  severity  : high
+  action    : Run a memory diagnostic on the affected node and flag it for service.
+  windows   : 75-75   llm=3.0s
+  --------------------------------------------------------------------
+
+
+  --- incident card (generated summary, not a verified diagnosis) ---
+  summary   : Repeated kernel fatal errors indicate a potential hardware issue with the system.
+  component : KERNEL
+  severity  : high
+  action    : Run a full system reboot to isolate and diagnose the issue.
+  windows   : 81-81   llm=2.9s
+  --------------------------------------------------------------------
+
+
+done. 94 windows, 3 incident(s) predicted. Events: C:\programs\OS project\results\demo_runs\electra_shared.jsonl

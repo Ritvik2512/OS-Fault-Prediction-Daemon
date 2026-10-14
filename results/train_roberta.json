@@ -1,0 +1,29 @@
+{
+  "name": "roberta",
+  "type": "transformer",
+  "hf": "FacebookAI/roberta-base",
+  "variant": "default",
+  "focal": false,
+  "max_length": 512,
+  "rle": true,
+  "batch": 8,
+  "accum": 4,
+  "lr": 2e-05,
+  "pos_weight": 2.0,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.39938269738211224,
+      "val_pr_auc": 0.2586459444683246
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3656707572216741,
+      "val_pr_auc": 0.16727387121857196
+    }
+  ],
+  "best_val_pr_auc": 0.2586459444683246,
+  "train_seconds": 2852.6,
+  "peak_vram_mb": 3803.4,
+  "train_windows": 47311
+}

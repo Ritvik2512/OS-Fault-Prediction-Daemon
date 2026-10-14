@@ -1,0 +1,6 @@
+[hgb] train (47311, 596) (4,301 pos), val (20896, 596)
+[hgb] max_iter=200 lr=0.05: val PR-AUC 0.2133 (9s)
+[hgb] max_iter=200 lr=0.1: val PR-AUC 0.2072 (19s)
+[hgb] max_iter=400 lr=0.05: val PR-AUC 0.2054 (38s)
+[hgb] max_iter=400 lr=0.1: val PR-AUC 0.2033 (57s)
+[hgb] done: best val PR-AUC 0.2133 (max_iter=200, lr=0.05), 57s for the whole grid

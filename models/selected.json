@@ -1,0 +1,16 @@
+{
+  "name": "roberta",
+  "path": "models/roberta",
+  "type": "transformer",
+  "tau": 0.9302051067352296,
+  "N": 1,
+  "cooldown": 0,
+  "max_length": 512,
+  "rle": true,
+  "n_tid": null,
+  "reason": "Highest val PR-AUC (0.2586); no other model within 0.01",
+  "demo_slice": [
+    4591434,
+    4593333
+  ]
+}

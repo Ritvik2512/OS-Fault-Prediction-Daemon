@@ -1,0 +1,36 @@
+{
+  "name": "hgb",
+  "type": "hgb",
+  "variant": "default",
+  "n_tid": 586,
+  "n_features": 596,
+  "grid": [
+    {
+      "max_iter": 200,
+      "learning_rate": 0.05,
+      "val_pr_auc": 0.21326061298890356
+    },
+    {
+      "max_iter": 200,
+      "learning_rate": 0.1,
+      "val_pr_auc": 0.20721692424864585
+    },
+    {
+      "max_iter": 400,
+      "learning_rate": 0.05,
+      "val_pr_auc": 0.20535211507677373
+    },
+    {
+      "max_iter": 400,
+      "learning_rate": 0.1,
+      "val_pr_auc": 0.20326413119013514
+    }
+  ],
+  "max_iter": 200,
+  "learning_rate": 0.05,
+  "best_val_pr_auc": 0.21326061298890356,
+  "max_length": null,
+  "train_seconds": 56.7,
+  "peak_vram_mb": 0.0,
+  "train_windows": 47311
+}

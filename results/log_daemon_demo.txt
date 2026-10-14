@@ -1,0 +1,118 @@
+LLM warmed up
+Simulated live stream from held-out BGL logs: 1,899 lines at 200 lines/s
+model=roberta  tau=0.9302  N=1  cooldown=0 windows  mode=demo
+
+[    0] conf=0.369
+[    1] conf=0.369
+[    2] conf=0.369
+[    3] conf=0.369
+[    4] conf=0.369
+[    5] conf=0.369
+[    6] conf=0.369
+[    7] conf=0.369
+[    8] conf=0.369
+[    9] conf=0.369
+[   10] conf=0.369
+[   11] conf=0.369
+[   12] conf=0.369
+[   13] conf=0.369
+[   14] conf=0.369
+[   15] conf=0.369
+[   16] conf=0.369
+[   17] conf=0.656
+[   18] conf=0.279
+[   19] conf=0.117
+[   20] conf=0.152
+[   21] conf=0.732
+[   22] conf=0.331
+[   23] conf=0.246
+[   24] conf=0.296
+[   25] conf=0.293
+[   26] conf=0.634
+[   27] conf=0.753
+[   28] conf=0.342
+[   29] conf=0.722
+[   30] conf=0.455
+[   31] conf=0.756
+[   32] conf=0.493
+[   33] conf=0.693
+[   34] conf=0.753
+[   35] conf=0.724
+[   36] conf=0.715
+[   37] conf=0.681
+[   38] conf=0.685
+[   39] conf=0.722
+[   40] conf=0.678
+[   41] conf=0.681
+[   42] conf=0.634
+[   43] conf=0.041
+[   44] conf=0.004
+[   45] conf=0.152
+[   46] conf=0.125
+[   47] conf=0.323
+[   48] conf=0.165
+[   49] conf=0.122
+[   50] conf=0.244
+[   51] conf=0.713
+[   52] conf=0.688
+[   53] conf=0.663
+[   54] conf=0.665
+[   55] conf=0.697
+[   56] conf=0.684
+[   57] conf=0.322
+[   58] conf=0.321
+[   59] conf=0.710
+[   60] conf=0.759
+[   61] conf=0.682
+[   62] conf=0.766
+[   63] conf=0.690
+[   64] conf=0.686
+[   65] conf=0.707
+[   66] conf=0.515
+[   67] conf=0.733
+[   68] conf=0.693
+[   69] conf=0.739
+[   70] conf=0.691
+[   71] conf=0.984  PRE-FAULT  <-- INCIDENT PREDICTED (windows 71-71)
+[   72] conf=0.988  PRE-FAULT
+[   73] conf=0.985  PRE-FAULT
+[   74] conf=0.978  PRE-FAULT
+[   75] conf=0.991  PRE-FAULT
+[   76] conf=0.989  PRE-FAULT
+[   77] conf=0.981  PRE-FAULT
+[   78] conf=0.976  PRE-FAULT
+[   79] conf=0.779
+[   80] conf=0.945  PRE-FAULT  <-- INCIDENT PREDICTED (windows 80-80)
+[   81] conf=0.990  PRE-FAULT
+[   82] conf=0.987  PRE-FAULT
+[   83] conf=0.976  PRE-FAULT
+[   84] conf=0.982  PRE-FAULT
+[   85] conf=0.991  PRE-FAULT
+[   86] conf=0.964  PRE-FAULT
+[   87] conf=0.973  PRE-FAULT
+[   88] conf=0.981  PRE-FAULT
+[   89] conf=0.007
+[   90] conf=0.428
+[   91] conf=0.281
+[   92] conf=0.117
+[   93] conf=0.148
+
+  --- incident card (generated summary, not a verified diagnosis) ---
+  summary   : Repeated kernel error messages indicate a potential hardware issue with the machine's memory and peripherals.
+  component : KERNEL
+  severity  : high
+  action    : Trigger a system-wide power cycle to isolate the issue and initiate a thorough diagnostic process.
+  windows   : 71-71   llm=5.2s
+  --------------------------------------------------------------------
+
+
+  --- incident card (generated summary, not a verified diagnosis) ---
+  summary   : Repeated kernel fatal errors indicate a potential hardware issue with the system.
+  component : KERNEL
+  severity  : critical
+  action    : Immediately power cycle the affected node to prevent further damage.
+  windows   : 80-80   llm=4.0s
+  --------------------------------------------------------------------
+
+
+done. 94 windows, 2 incident(s) predicted. Events: C:\programs\OS project\results\live_events.jsonl

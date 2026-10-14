@@ -1,0 +1,48 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[roberta] FacebookAI/roberta-base on cuda: train 47,311 (4,301 pos), val 20,896, max_length 512, batch 8x4, lr 2e-05, focal=False
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|##########| 197/197 [00:00<00:00, 4092.35it/s]
+[transformers] [1mRobertaForSequenceClassification LOAD REPORT[0m from: FacebookAI/roberta-base
+Key                        | Status     | 
+---------------------------+------------+-
+lm_head.layer_norm.bias    | UNEXPECTED | 
+lm_head.layer_norm.weight  | UNEXPECTED | 
+lm_head.dense.weight       | UNEXPECTED | 
+lm_head.dense.bias         | UNEXPECTED | 
+lm_head.bias               | UNEXPECTED | 
+classifier.out_proj.bias   | MISSING    | 
+classifier.dense.weight    | MISSING    | 
+classifier.out_proj.weight | MISSING    | 
+classifier.dense.bias      | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[roberta] epoch 1 batch 500/5913 loss 0.5148 (92s)
+[roberta] epoch 1 batch 1000/5913 loss 0.4813 (181s)
+[roberta] epoch 1 batch 1500/5913 loss 0.4558 (269s)
+[roberta] epoch 1 batch 2000/5913 loss 0.4449 (357s)
+[roberta] epoch 1 batch 2500/5913 loss 0.4341 (446s)
+[roberta] epoch 1 batch 3000/5913 loss 0.4267 (534s)
+[roberta] epoch 1 batch 3500/5913 loss 0.4202 (623s)
+[roberta] epoch 1 batch 4000/5913 loss 0.4153 (710s)
+[roberta] epoch 1 batch 4500/5913 loss 0.4097 (800s)
+[roberta] epoch 1 batch 5000/5913 loss 0.4058 (890s)
+[roberta] epoch 1 batch 5500/5913 loss 0.4012 (978s)
+[W1014 12:15:24.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 356515840 bytes (free: 0, total: 6441926656).
+[roberta] epoch 1: loss 0.3994  val PR-AUC 0.2586
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|##########| 1/1 [00:00<00:00,  1.23it/s]Writing model shards: 100%|##########| 1/1 [00:00<00:00,  1.22it/s]
+[roberta] epoch 2 batch 500/5913 loss 0.3835 (1297s)
+[roberta] epoch 2 batch 1000/5913 loss 0.3844 (1436s)
+[roberta] epoch 2 batch 1500/5913 loss 0.3850 (1574s)
+[roberta] epoch 2 batch 2000/5913 loss 0.3854 (1716s)
+[roberta] epoch 2 batch 2500/5913 loss 0.3815 (1860s)
+[roberta] epoch 2 batch 3000/5913 loss 0.3757 (1997s)
+[roberta] epoch 2 batch 3500/5913 loss 0.3738 (2130s)
+[roberta] epoch 2 batch 4000/5913 loss 0.3719 (2266s)
+[roberta] epoch 2 batch 4500/5913 loss 0.3725 (2405s)
+[roberta] epoch 2 batch 5000/5913 loss 0.3717 (2538s)
+[roberta] epoch 2 batch 5500/5913 loss 0.3683 (2668s)
+[roberta] epoch 2: loss 0.3657  val PR-AUC 0.1673
+[roberta] early stop (no val PR-AUC gain)
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|##########| 201/201 [00:00<00:00, 5559.22it/s]
+[roberta] done: best val PR-AUC 0.2586, 47.5 min, peak VRAM 3803 MB

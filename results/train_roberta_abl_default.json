@@ -1,0 +1,24 @@
+{
+  "name": "roberta_abl_default",
+  "type": "transformer",
+  "hf": "FacebookAI/roberta-base",
+  "variant": "default",
+  "focal": false,
+  "max_length": 512,
+  "rle": true,
+  "batch": 8,
+  "accum": 4,
+  "lr": 2e-05,
+  "pos_weight": 2.0,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.38835276918952527,
+      "val_pr_auc": 0.24667034816150477
+    }
+  ],
+  "best_val_pr_auc": 0.24667034816150477,
+  "train_seconds": 908.2,
+  "peak_vram_mb": 3803.4,
+  "train_windows": 47311
+}

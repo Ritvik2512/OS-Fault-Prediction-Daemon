@@ -1,0 +1,67 @@
+# v2 fault-prediction pipeline: every tunable lives here.
+seed: 42
+
+paths:
+  bgl: data/BGL.log
+  data_dir: data/v2
+  models_dir: models
+  results_dir: results
+
+window:
+  W: 20              # lines per window
+  K: 100             # look-ahead: alert within next K lines => pre-fault
+  train_stride: 10   # 5.3 overlapping train windows (val/test always use stride = W)
+  buffer: 200        # 5.2 drop train negatives whose next alert is in (K, K+buffer]
+  neg_ratio: 10      # 5.5 train negatives per positive (null = keep all)
+
+split:               # 5.4 chronological, by line index
+  train: 0.70
+  val: 0.10          # remainder (0.20) is test
+
+drain:
+  mine_on: train     # train = mine templates on the train lines only; all = v1 behaviour
+
+render:              # 5.1
+  rle: true          # collapse consecutive duplicate lines to "<line> xN"
+  include_meta: true # prefix each line with its component + severity fields
+  max_template_tokens: 24
+  max_length: null   # null = smallest of [64,128,256,512] covering the 95th percentile
+  max_length_cap: 512
+
+train:
+  pos_weight: 2.0
+  epochs: 3
+  patience: 1        # early stop on val PR-AUC
+  warmup_ratio: 0.06
+  eval_batch: 128
+  focal_gamma: 2.0   # only used with --focal
+  ablation_epochs: 1 # fixed, equal budget for every transformer ablation run (incl. an all-levers-on control)
+
+models:
+  distilbert: {hf: distilbert-base-uncased, batch: 32, accum: 1, lr: 5.0e-5}
+  roberta:    {hf: FacebookAI/roberta-base,            batch: 8,  accum: 4, lr: 2.0e-5}
+  electra:    {hf: models/pretrained/electra-base-discriminator, batch: 8, accum: 4, lr: 2.0e-5}   # google/electra-base-discriminator; 5e-5 diverged (see results/log_train_electra_lr5e-5_diverged.txt)
+  hgb:        {max_iter: [200, 400], learning_rate: [0.05, 0.1]}
+
+eval:
+  min_recall: 0.40          # 7.1 tau* = max precision s.t. val recall >= this (used when precision_target is null)
+  precision_target: 0.80    # precision-first operating point: tau* = lowest threshold with val precision >= this
+                            # (= highest val recall at that precision). Set to null for the PRD's recall-floor rule.
+  episode_gap: 100          # 7.3 merge alert runs separated by fewer lines than this
+  N_grid: [1, 2, 3, 5, 7]
+  cooldown_grid: [0, 5, 10, 30, 60]   # in windows
+  min_episode_recall: 0.5
+  tie_margin: 0.01          # 7.4 val PR-AUC tiebreak margin
+
+daemon:
+  speed: 200         # lines / second
+  lead_lines: 1500   # quiet lead-in before the demo episode
+  tail_lines: 400
+  max_llm_lines: 40
+  device: auto       # detector device: auto | cpu | cuda
+
+llm:
+  model: llama3.2:3b
+  keep_alive: 30m
+  num_predict: 200
+  temperature: 0.2

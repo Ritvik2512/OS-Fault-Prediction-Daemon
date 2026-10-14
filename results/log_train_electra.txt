@@ -1,0 +1,48 @@
+[electra] models/pretrained/electra-base-discriminator on cuda: train 47,311 (4,301 pos), val 20,896, max_length 512, batch 8x4, lr 2e-05, focal=False
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|##########| 197/197 [00:00<00:00, 29521.52it/s]
+[transformers] [1mElectraForSequenceClassification LOAD REPORT[0m from: models/pretrained/electra-base-discriminator
+Key                                               | Status     | 
+--------------------------------------------------+------------+-
+discriminator_predictions.dense.bias              | UNEXPECTED | 
+discriminator_predictions.dense.weight            | UNEXPECTED | 
+electra.embeddings_project.weight                 | UNEXPECTED | 
+discriminator_predictions.dense_prediction.bias   | UNEXPECTED | 
+discriminator_predictions.dense_prediction.weight | UNEXPECTED | 
+electra.embeddings_project.bias                   | UNEXPECTED | 
+classifier.out_proj.bias                          | MISSING    | 
+classifier.dense.weight                           | MISSING    | 
+classifier.dense.bias                             | MISSING    | 
+classifier.out_proj.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+[electra] epoch 1 batch 500/5913 loss 0.5441 (92s)
+[electra] epoch 1 batch 1000/5913 loss 0.4805 (181s)
+[electra] epoch 1 batch 1500/5913 loss 0.4525 (270s)
+[electra] epoch 1 batch 2000/5913 loss 0.4395 (359s)
+[electra] epoch 1 batch 2500/5913 loss 0.4301 (449s)
+[electra] epoch 1 batch 3000/5913 loss 0.4229 (541s)
+[electra] epoch 1 batch 3500/5913 loss 0.4177 (633s)
+[electra] epoch 1 batch 4000/5913 loss 0.4131 (720s)
+[electra] epoch 1 batch 4500/5913 loss 0.4072 (812s)
+[electra] epoch 1 batch 5000/5913 loss 0.4029 (904s)
+[electra] epoch 1 batch 5500/5913 loss 0.3988 (996s)
+[W1014 18:35:10.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 211812352 bytes (free: 0, total: 6441926656).
+[electra] epoch 1: loss 0.3974  val PR-AUC 0.2170
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|##########| 1/1 [00:00<00:00,  3.85it/s]Writing model shards: 100%|##########| 1/1 [00:00<00:00,  3.85it/s]
+[electra] epoch 2 batch 500/5913 loss 0.3712 (1216s)
+[electra] epoch 2 batch 1000/5913 loss 0.3731 (1284s)
+[electra] epoch 2 batch 1500/5913 loss 0.3862 (1350s)
+[electra] epoch 2 batch 2000/5913 loss 0.3837 (1419s)
+[electra] epoch 2 batch 2500/5913 loss 0.3796 (1488s)
+[electra] epoch 2 batch 3000/5913 loss 0.3739 (1556s)
+[electra] epoch 2 batch 3500/5913 loss 0.3722 (1624s)
+[electra] epoch 2 batch 4000/5913 loss 0.3710 (1692s)
+[electra] epoch 2 batch 4500/5913 loss 0.3714 (1761s)
+[electra] epoch 2 batch 5000/5913 loss 0.3700 (1829s)
+[electra] epoch 2 batch 5500/5913 loss 0.3680 (1898s)
+[electra] epoch 2: loss 0.3653  val PR-AUC 0.1623
+[electra] early stop (no val PR-AUC gain)
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|##########| 201/201 [00:00<00:00, 9738.65it/s]
+[electra] done: best val PR-AUC 0.2170, 33.1 min, peak VRAM 3578 MB

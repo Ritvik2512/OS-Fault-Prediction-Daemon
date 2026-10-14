@@ -1,0 +1,29 @@
+{
+  "name": "distilbert",
+  "type": "transformer",
+  "hf": "distilbert-base-uncased",
+  "variant": "default",
+  "focal": false,
+  "max_length": 512,
+  "rle": true,
+  "batch": 32,
+  "accum": 1,
+  "lr": 5e-05,
+  "pos_weight": 2.0,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.3856911405195571,
+      "val_pr_auc": 0.24024767646661466
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.35734118643122964,
+      "val_pr_auc": 0.18783433154266066
+    }
+  ],
+  "best_val_pr_auc": 0.24024767646661466,
+  "train_seconds": 1450.5,
+  "peak_vram_mb": 4219.7,
+  "train_windows": 47311
+}
