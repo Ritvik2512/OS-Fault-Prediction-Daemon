@@ -35,7 +35,7 @@
   "lead_q3_s": 13.0,
   "train_minutes": 47.54333333333333,
   "peak_vram_mb": 3803.4,
-  "infer_ms_per_window": 14.048543333410635,
+  "infer_ms_per_window": 24.104943333562307,
   "runtime_parity_max_diff": 0.00036343932151794434,
   "val_gate_grid": [
     [

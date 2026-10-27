@@ -1,0 +1,32 @@
+[distilbert] scoring 47,311 training windows ...
+[W1022 17:19:53.000000000 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 276824064 bytes (free: 0, total: 6441926656).
+
+=== distilbert   threshold tau = 0.9733 (chosen on the validation set) ===
+split        windows pre-fault  accuracy  precision  recall      F1  PR-AUC  ROC-AUC     TP     FP     FN      TN
+training      47,311     4,301     0.919      0.978   0.112   0.200   0.430    0.789    480     11  3,821  42,999
+validation    20,896     1,087     0.952      0.802   0.097   0.172   0.240    0.794    105     26    982  19,783
+test          44,124     1,250     0.976      0.946   0.170   0.288   0.378    0.859    212     12  1,038  42,862
+[electra] scoring 47,311 training windows ...
+
+=== electra   threshold tau = 0.9524 (chosen on the validation set) ===
+split        windows pre-fault  accuracy  precision  recall      F1  PR-AUC  ROC-AUC     TP     FP     FN      TN
+training      47,311     4,301     0.917      0.982   0.091   0.167   0.444    0.808    392      7  3,909  43,003
+validation    20,896     1,087     0.951      0.800   0.077   0.141   0.217    0.795     84     21  1,003  19,788
+test          44,124     1,250     0.976      0.954   0.150   0.259   0.431    0.855    187      9  1,063  42,865
+[hgb] scoring 47,311 training windows ...
+
+=== hgb   threshold tau = 0.9990 (chosen on the validation set) ===
+split        windows pre-fault  accuracy  precision  recall      F1  PR-AUC  ROC-AUC     TP     FP     FN      TN
+training      47,311     4,301     0.911      1.000   0.019   0.037   0.512    0.827     81      0  4,220  43,010
+validation    20,896     1,087     0.948      0.812   0.012   0.024   0.213    0.819     13      3  1,074  19,806
+test          44,124     1,250     0.972      1.000   0.012   0.024   0.363    0.911     15      0  1,235  42,874
+[roberta] scoring 47,311 training windows ...
+
+=== roberta   threshold tau = 0.9302 (chosen on the validation set) ===
+split        windows pre-fault  accuracy  precision  recall      F1  PR-AUC  ROC-AUC     TP     FP     FN      TN
+training      47,311     4,301     0.919      0.980   0.115   0.206   0.438    0.803    495     10  3,806  43,000
+validation    20,896     1,087     0.952      0.805   0.098   0.175   0.259    0.810    107     26    980  19,783
+test          44,124     1,250     0.980      0.964   0.303   0.461   0.473    0.867    379     14    871  42,860
+
+Window-level metrics. The training set is the sampled training data (10 normal windows per pre-fault window), so its pre-fault rate is higher than validation/test, which keep the real rate.
+wrote C:\programs\OS project\results\split_metrics.csv

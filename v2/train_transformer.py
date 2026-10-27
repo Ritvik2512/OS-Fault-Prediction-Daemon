@@ -9,11 +9,12 @@ import time
 import numpy as np
 import torch
 import torch.nn.functional as F
-from sklearn.metrics import average_precision_score
+from sklearn.metrics import accuracy_score, average_precision_score
 from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
                           get_linear_schedule_with_warmup)
 
 import common as C
+from common import print_epoch
 
 
 def tokenize(tok, texts, max_len):
@@ -74,6 +75,9 @@ def main():
                   for sp in ("val", "test")}
     va_pos = C.labelled_positions(cfg, "val")
     va_ids = [stream_ids["val"][i] for i in va_pos]
+    te_y = C.load_split(cfg, "test")[1]
+    te_ids = [stream_ids["test"][i] for i in C.labelled_positions(cfg, "test")]
+    eval_sets = {"training": (tr_ids, tr_y), "validation": (va_ids, va_y), "test": (te_ids, te_y)}
     print(f"[{args.name}] {args.model} on {device}: train {len(tr_y):,} ({int(tr_y.sum()):,} pos), "
           f"val {len(va_y):,}, max_length {max_len}, batch {bs}x{accum}, lr {lr}, focal={args.focal}")
 
@@ -113,9 +117,12 @@ def main():
             run, nb = run + loss.item() * accum, nb + 1
             if nb % 500 == 0:
                 print(f"[{args.name}] epoch {epoch} batch {nb}/{len(perm) // bs} loss {run / nb:.4f} ({time.time() - t0:.0f}s)")
-        ap_val = float(average_precision_score(va_y, predict(model, tok, va_ids, tc["eval_batch"], device)))
-        history.append({"epoch": epoch, "train_loss": run / nb, "val_pr_auc": ap_val})
-        print(f"[{args.name}] epoch {epoch}: loss {run / nb:.4f}  val PR-AUC {ap_val:.4f}")
+        # end-of-epoch scores on all three splits; early stopping uses validation PR-AUC only
+        preds = {sp: predict(model, tok, ids, tc["eval_batch"], device) for sp, (ids, _) in eval_sets.items()}
+        tau, scores = C.split_scores(cfg, preds, {sp: y for sp, (_, y) in eval_sets.items()})
+        ap_val = scores["validation"]["pr_auc"]
+        history.append({"epoch": epoch, "train_loss": run / nb, "val_pr_auc": ap_val, "tau": tau, "metrics": scores})
+        print_epoch(args.name, epoch, run / nb, scores, tau, C.threshold_rule_text(cfg))
         if ap_val > best:
             best, bad = ap_val, 0
             model.save_pretrained(out_dir)

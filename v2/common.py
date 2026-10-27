@@ -339,3 +339,34 @@ def lead_stats(leads):
         return {"lead_median_s": None, "lead_q1_s": None, "lead_q3_s": None}
     q1, med, q3 = np.percentile(leads, [25, 50, 75])
     return {"lead_median_s": float(med), "lead_q1_s": float(q1), "lead_q3_s": float(q3)}
+
+
+# ---------------------------------------------------------------- per-epoch / per-setting training printout
+
+def epoch_metrics(y, p, threshold):
+    """Window-level metrics (plus accuracy) at a given decision threshold."""
+    from sklearn.metrics import accuracy_score
+    m = window_metrics(y, p, threshold)
+    m["accuracy"] = float(accuracy_score(y, (p >= threshold).astype(int)))
+    return m
+
+
+def split_scores(cfg, preds, labels):
+    """Pick the threshold on VALIDATION with the deployment rule (eval.precision_target), then score every split
+    at that threshold - the same rule used for the final reported numbers."""
+    tau, _ = choose_threshold(cfg, labels["validation"], preds["validation"])
+    return tau, {sp: epoch_metrics(labels[sp], preds[sp], tau) for sp in preds}
+
+
+def print_epoch(name, epoch, loss, scores, tau, rule, header=None):
+    print()
+    print(header or f"[{name}] ===== epoch {epoch} finished - training loss {loss:.4f} =====")
+    print(f"{'split':<11}{'windows':>9}{'accuracy':>10}{'precision':>11}{'recall':>8}{'F1':>8}{'PR-AUC':>8}"
+          f"{'ROC-AUC':>9}{'TP':>7}{'FP':>7}{'FN':>7}{'TN':>8}")
+    for sp, m in scores.items():
+        n = m["tp"] + m["fp"] + m["fn"] + m["tn"]
+        print(f"{sp:<11}{n:>9,}{m['accuracy']:>10.3f}{m['precision']:>11.3f}{m['recall']:>8.3f}{m['f1']:>8.3f}"
+              f"{m['pr_auc']:>8.3f}{m['roc_auc']:>9.3f}{m['tp']:>7,}{m['fp']:>7,}{m['fn']:>7,}{m['tn']:>8,}")
+    print(f"(threshold tau = {tau:.4f}: {rule}, chosen on the validation predictions. Model selection uses "
+          "validation PR-AUC only - test is shown for reporting, never for tuning)")
+    print(flush=True)

@@ -37,10 +37,10 @@ N and cooldown were chosen on val to maximise incident precision subject to epis
 
 | Model | Train (min) | Peak VRAM (MB) | Inference (ms/window) |
 |---|---|---|---|
-| distilbert | 24.2 | 4220 | 8.5 |
-| electra | 33.1 | 3578 | 14.3 |
-| hgb | 0.9 | 0 | 1.4 |
-| roberta | 47.5 | 3803 | 14.0 |
+| distilbert | 24.2 | 4220 | 15.1 |
+| electra | 33.1 | 3578 | 21.0 |
+| hgb | 0.9 | 0 | 4.5 |
+| roberta | 47.5 | 3803 | 24.1 |
 
 Inference is single-window latency through `detector.py` from raw log lines (transformers on the GPU).
 

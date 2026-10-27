@@ -38,22 +38,7 @@ Episode-level (incident) - a different unit from the table above:
 - Window-level test precision 0.964 / recall 0.303 (v1 reported 0.193 / 0.649).
 - Incident-level test precision 0.343, episode recall 0.161 (35 of 218 episodes preceded by an incident).
 - Median lead time: 12.0 s (IQR 8.5-13.0 s) from the first incident to the episode's first alert line, over the preceded test episodes.
-- LLM latency (llama3.2:3b): 2 incident card(s) in the last daemon run, median 4.3 s (min 3.9, max 4.7).
-
-## Targets missed
-
-- Window-level precision >= 0.5 at recall >= 0.40: got precision 0.964 at recall 0.303. Precision is met; recall is below 0.40 because the threshold rule is precision-first (the lowest threshold whose val precision >= 0.8 (i.e. the highest val recall at that precision)), chosen after the first (recall-floor) results were seen.
-- Incident-level precision >= 0.8: got 0.343 (episode recall 0.161).
-- No gate setting reached val episode recall >= 0.5; N/cooldown are the max-F0.5 fallback.
-
-## Findings and caveats
-
-- **v1 was not truncating.** v1 windows were 20 bare Drain3 template IDs (e.g. `1103 1103 ...`), 22 tokens median / 42 max, so 0% were cut at max_length 64. Its weakness was that the model saw meaningless integers. v2 renders template *text* with run-length encoding; that is what made truncation a real concern (handled above).
-- **Distribution drift.** Templates were mined on the train lines only, as a deployed daemon would. 46% of test lines match no train template (they fall back to digit-masked raw text), and the positive rate drops from 5.2% (val) to 2.8% (test). A threshold chosen for precision on val therefore transfers imperfectly to test.
-- **Selection rule vs. test precision.** The rule (fixed before looking at test) picked `roberta`. `hgb` has the highest window-level test precision (1.000, recall 0.012); it was not chosen, because choosing by test numbers would be tuning on test.
-- **Lead time is bounded by K.** An incident only counts if the episode starts within K=100 lines, so the lead time in seconds mostly reflects how fast the log was being written before that episode (seconds during bursts, hours when the system is quiet), not long-range foresight.
-- **Incidents during an episode are not credited.** The daemon cannot see labels, so it also fires while a fault is already under way; those are counted as *late*, not predictive.
-- **Demo slice.** `select_model.py` picks the replay slice offline, using ground truth, as a test episode whose run-up the gate fired on, with a quiet lead-in. It is a showcase and says nothing about average performance; the tables above do. In the recorded `daemon.py --eval` replay of that slice: 1 incident(s) fired before an alert (predictive), 0 with no alert following (false alarm), and 1 after alerts had already started (late).
+- LLM latency (llama3.2:3b): 2 incident card(s) in the last daemon run, median 2.5 s (min 2.3, max 2.7); source: `results/demo_runs/roberta_shared.jsonl`.
 
 ## Ablation: `roberta` with each data lever switched off
 

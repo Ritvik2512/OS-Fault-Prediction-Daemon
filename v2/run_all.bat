@@ -16,6 +16,8 @@ rem ELECTRA weights live in models\pretrained (downloaded with huggingface_hub s
 %PY% v2\select_model.py || goto :fail
 %PY% v2\evaluate.py --ablation || goto :fail
 %PY% v2\evaluate.py --report || goto :fail
+rem training / validation / test metrics for every model -> results\split_metrics.csv
+%PY% v2\split_metrics.py || goto :fail
 rem needs Ollama running for real LLM cards (otherwise cards fall back); writes results\model_report.md
 %PY% v2\compare_demo.py || goto :fail
 

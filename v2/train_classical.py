@@ -12,6 +12,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import average_precision_score
 
 import common as C
+from common import print_epoch
 
 
 def main():
@@ -36,7 +37,9 @@ def main():
     va_s, va_y = C.load_split(cfg, "val")
     Xtr = C.features_for_starts(tr_s, lines, W, n_tid)
     Xva = C.features_for_starts(va_s, lines, W, n_tid)
-    print(f"[{args.name}] train {Xtr.shape} ({int(tr_y.sum()):,} pos), val {Xva.shape}")
+    te_s, te_y = C.load_split(cfg, "test")
+    Xte = C.features_for_starts(te_s, lines, W, n_tid)
+    print(f"[{args.name}] train {Xtr.shape} ({int(tr_y.sum()):,} pos), val {Xva.shape}, test {Xte.shape}")
 
     grid, best, t0 = [], None, time.time()
     hp = cfg["models"]["hgb"]
@@ -44,9 +47,17 @@ def main():
         clf = HistGradientBoostingClassifier(max_iter=max_iter, learning_rate=lr, class_weight="balanced",
                                              early_stopping=False, random_state=cfg["seed"])
         clf.fit(Xtr, tr_y)
-        ap_val = float(average_precision_score(va_y, clf.predict_proba(Xva)[:, 1]))
-        grid.append({"max_iter": max_iter, "learning_rate": lr, "val_pr_auc": ap_val})
-        print(f"[{args.name}] max_iter={max_iter} lr={lr}: val PR-AUC {ap_val:.4f} ({time.time() - t0:.0f}s)")
+        # scores on all three splits for this setting; the choice uses validation PR-AUC only
+        # scores on all three splits for this setting, at the threshold chosen on validation;
+        # the setting itself is chosen on validation PR-AUC only
+        sets = {"training": (Xtr, tr_y), "validation": (Xva, va_y), "test": (Xte, te_y)}
+        tau, scores = C.split_scores(cfg, {sp: clf.predict_proba(X)[:, 1] for sp, (X, _) in sets.items()},
+                                     {sp: y for sp, (_, y) in sets.items()})
+        ap_val = scores["validation"]["pr_auc"]
+        grid.append({"max_iter": max_iter, "learning_rate": lr, "val_pr_auc": ap_val, "tau": tau, "metrics": scores})
+        print_epoch(args.name, "-", float("nan"), scores, tau, C.threshold_rule_text(cfg),
+                    header=f"[{args.name}] ===== setting max_iter={max_iter}, learning_rate={lr} trained "
+                           f"({time.time() - t0:.0f}s) =====")
         if best is None or ap_val > best[0]:
             best = (ap_val, clf, max_iter, lr)
     train_seconds = time.time() - t0

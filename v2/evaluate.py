@@ -46,6 +46,40 @@ def tune_gate(cfg, probs, tau, stream, eps, ts):
     return max(rows, key=lambda r: (f05(r), -r[0], -r[1]))[:2], False, rows
 
 
+def write_gate_sweep(cfg, lines=None):
+    """Section 7.3 gate sweep on VAL for every evaluated model -> results/gate_sweep.csv.
+    Same gate, scoring and choice rule as tune_gate; one row per (model, N, cooldown)."""
+    res, W, K, ev = C.path(cfg, "results_dir"), cfg["window"]["W"], cfg["window"]["K"], cfg["eval"]
+    lines = lines if lines is not None else C.load_lines(cfg)
+    meta = C.read_json(C.path(cfg, "data_dir", "default", "meta.json"))
+    stream = C.load_stream(cfg, "val")
+    eps = C.find_episodes(lines["alert"], *meta["bounds"]["val"], ev["episode_gap"], W)
+    rows = []
+    for f in sorted(res.glob("eval_*.json")):
+        if "_abl_" in f.stem:
+            continue
+        e = C.read_json(f)
+        probs = np.load(res / f"preds_{e['model']}_val_stream.npy")
+        (N, cd), floor_met, _ = tune_gate(cfg, probs, e["tau"], stream, eps, lines["ts"])
+        chosen_by = (f"max incident precision s.t. episode recall >= {ev['min_episode_recall']}" if floor_met
+                     else "fallback: max F0.5 (episode recall floor unreachable)")
+        for n, c in itertools.product(ev["N_grid"], ev["cooldown_grid"]):
+            sc = C.score_incidents(C.simulate_gate(probs, e["tau"], n, c), stream, W, K, *eps, lines["ts"])
+            rows.append({"model": e["model"], "split": "val", "tau": e["tau"], "N": n, "cooldown_windows": c,
+                         "incidents": sc["incidents"], "predictive": sc["predictive"],
+                         "late_in_episode": sc["in_episode"], "false_alarms": sc["false"],
+                         "incident_precision": sc["incident_precision"],
+                         "incident_precision_lenient": sc["incident_precision_lenient"],
+                         "episodes_caught": sc["episodes_caught"], "episodes": sc["episodes"],
+                         "episode_recall": sc["episode_recall"],
+                         "meets_recall_floor": sc["episode_recall"] >= ev["min_episode_recall"],
+                         "chosen": (n, c) == (N, cd), "chosen_by": chosen_by})
+    out = res / "gate_sweep.csv"
+    pd.DataFrame(rows).to_csv(out, index=False)
+    print(f"wrote {out} ({len(rows)} rows)")
+    return out
+
+
 def infer_latency(cfg, info, lines, stream, expected, n=60):
     """Single-window latency through detector.py from raw lines; also checks runtime == offline encoding."""
     det = Detector(cfg, info)
@@ -227,6 +261,7 @@ def compare(cfg):
         "See `ablation.md` for the measured effect of each data lever.", "",
         "![PR curves](pr_curves.png)", ""]
     (res / "model_comparison.md").write_text("\n".join(md), encoding="utf-8")
+    write_gate_sweep(cfg, lines)
     print(f"\nSELECTED: {winner} - {why}")
     print(f"wrote {res / 'model_comparison.csv'}, model_comparison.md, pr_curves.png, confusion_*.png, lead_time_hist.png")
 
@@ -298,48 +333,24 @@ def ablation(cfg, force):
     print("\n".join(md))
 
 
-def demo_eval_sentence(res):
-    """Summarise the last `daemon.py --eval` replay (labels live only in live_events_eval.jsonl)."""
-    p = res / "live_events_eval.jsonl"
-    if not p.exists():
-        return " No `--eval` replay of the demo slice has been recorded."
-    ev = [json.loads(ln) for ln in p.read_text(encoding="utf-8").splitlines()]
-    truth = {e["window_idx"]: e["truth"] for e in ev if e["type"] == "window"}
-    kinds = {"predictive": 0, "late": 0, "false": 0}
-    for e in ev:
-        if e["type"] == "incident_fired":
-            t = truth[e["window_range"][1]]
-            kinds["late" if t["alert_in_window"] else "predictive" if t["alert_within_K"] else "false"] += 1
-    return (f" In the recorded `daemon.py --eval` replay of that slice: {kinds['predictive']} incident(s) fired before "
-            f"an alert (predictive), {kinds['false']} with no alert following (false alarm), and {kinds['late']} after "
-            "alerts had already started (late).")
-
-
 def report(cfg):
     res = C.path(cfg, "results_dir")
     sel = C.read_json(C.path(cfg, "models_dir", "selected.json"))
     df = pd.read_csv(res / "model_comparison.csv")
     models, w = df[df.type.notna()], df[df.model == sel["name"]].iloc[0]
     meta = C.read_json(C.path(cfg, "data_dir", "default", "meta.json"))
-    cards = []
-    ev = res / "live_events.jsonl"
-    if ev.exists():
-        cards = [r for r in map(json.loads, ev.read_text(encoding="utf-8").splitlines()) if r.get("type") == "incident"]
-    lat = [c["llm_seconds"] for c in cards]
-    missed = []
-    if not (w.test_precision >= TARGET_WINDOW_P and w.test_recall >= 0.40):
-        missed.append(f"Window-level precision >= {TARGET_WINDOW_P} at recall >= 0.40: got precision "
-                      f"{w.test_precision:.3f} at recall {w.test_recall:.3f}."
-                      + (" Precision is met; recall is below 0.40 because the threshold rule is precision-first ("
-                         + C.threshold_rule_text(cfg) + "), chosen after the first (recall-floor) results were seen."
-                         if w.test_precision >= TARGET_WINDOW_P else ""))
-    if not w.test_incident_precision >= TARGET_INCIDENT_P:
-        missed.append(f"Incident-level precision >= {TARGET_INCIDENT_P}: got {w.test_incident_precision:.3f} "
-                      f"(episode recall {w.test_episode_recall:.3f}).")
-    if not bool(w.threshold_rule_met):
-        missed.append("No threshold satisfied the val threshold rule (" + C.threshold_rule_text(cfg) + "); a fallback was used.")
-    if not bool(w.gate_recall_floor_met):
-        missed.append(f"No gate setting reached val episode recall >= {cfg['eval']['min_episode_recall']}; N/cooldown are the max-F0.5 fallback.")
+    # LLM latency from a run of the SELECTED model: the latest live run if it used that model,
+    # otherwise its recorded comparison run (so demoing another model doesn't change the report)
+    lat, lat_src = [], None
+    for src in (res / "live_events.jsonl", res / "demo_runs" / f"{sel['name']}_shared.jsonl"):
+        if not src.exists():
+            continue
+        evs = [json.loads(l) for l in src.read_text(encoding="utf-8").splitlines() if l.strip()]
+        start = next((e for e in evs if e.get("type") == "start"), {})
+        cards = [e["llm_seconds"] for e in evs if e.get("type") == "incident"]
+        if start.get("model", sel["name"]) == sel["name"] and cards:
+            lat, lat_src = cards, src.relative_to(C.ROOT).as_posix()
+            break
     md = ["# RUN REPORT - OS fault-prediction daemon v2", "",
           "Generated by `v2/evaluate.py --report` from the files in `results/`. The system **predicts** pre-fault "
           "windows on a **simulated live stream from held-out BGL logs** (a supercomputer system log); it does not "
@@ -362,30 +373,8 @@ def report(cfg):
           f"- Median lead time: {fmt(float(w.lead_median_s), 1)} s (IQR {fmt(float(w.lead_q1_s), 1)}-{fmt(float(w.lead_q3_s), 1)} s) "
           "from the first incident to the episode's first alert line, over the preceded test episodes.",
           f"- LLM latency ({cfg['llm']['model']}): " + (f"{len(lat)} incident card(s) in the last daemon run, median "
-          f"{np.median(lat):.1f} s (min {min(lat):.1f}, max {max(lat):.1f})." if lat else "no daemon run recorded yet."), "",
-          "## Targets missed", "", *([f"- {m}" for m in missed] or ["- None."]), ""]
-    best_p = models.sort_values("test_precision").iloc[-1]
-    md += ["## Findings and caveats", "",
-           "- **v1 was not truncating.** v1 windows were 20 bare Drain3 template IDs (e.g. `1103 1103 ...`), 22 tokens "
-           "median / 42 max, so 0% were cut at max_length 64. Its weakness was that the model saw meaningless integers. "
-           "v2 renders template *text* with run-length encoding; that is what made truncation a real concern (handled above).",
-           f"- **Distribution drift.** Templates were mined on the train lines only, as a deployed daemon would. "
-           f"{100 * meta['splits']['test']['unmatched_line_rate']:.0f}% of test lines match no train template (they fall back "
-           "to digit-masked raw text), and the positive rate drops from "
-           f"{100 * meta['splits']['val']['positive_rate']:.1f}% (val) to {100 * meta['splits']['test']['positive_rate']:.1f}% "
-           "(test). A threshold chosen for precision on val therefore transfers imperfectly to test.",
-           f"- **Selection rule vs. test precision.** The rule (fixed before looking at test) picked `{sel['name']}`. "
-           + (f"`{best_p.model}` has the highest window-level test precision ({best_p.test_precision:.3f}, recall "
-              f"{best_p.test_recall:.3f}); it was not chosen, because choosing by test numbers would be tuning on test."
-              if best_p.model != sel["name"] else "It also has the highest window-level test precision."),
-           f"- **Lead time is bounded by K.** An incident only counts if the episode starts within K={meta['K']} lines, so "
-           "the lead time in seconds mostly reflects how fast the log was being written before that episode (seconds during "
-           "bursts, hours when the system is quiet), not long-range foresight.",
-           "- **Incidents during an episode are not credited.** The daemon cannot see labels, so it also fires while a "
-           "fault is already under way; those are counted as *late*, not predictive.",
-           "- **Demo slice.** `select_model.py` picks the replay slice offline, using ground truth, as a test episode whose "
-           "run-up the gate fired on, with a quiet lead-in. It is a showcase and says nothing about average performance; "
-           "the tables above do." + demo_eval_sentence(res), ""]
+          f"{np.median(lat):.1f} s (min {min(lat):.1f}, max {max(lat):.1f}); source: `{lat_src}`." if lat
+          else f"no daemon run of `{sel['name']}` with incident cards recorded yet."), ""]
     abl = res / "ablation.md"
     if abl.exists():
         md += [abl.read_text(encoding="utf-8").replace("# Ablation", "## Ablation", 1)]
@@ -397,10 +386,13 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--ablation", action="store_true")
     ap.add_argument("--report", action="store_true")
+    ap.add_argument("--gate-sweep", action="store_true", help="only write results/gate_sweep.csv")
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
     cfg = C.load_config()
-    if args.ablation:
+    if args.gate_sweep:
+        write_gate_sweep(cfg)
+    elif args.ablation:
         ablation(cfg, args.force)
     elif args.report:
         report(cfg)

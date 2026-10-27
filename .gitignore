@@ -18,6 +18,13 @@ results/live_events.jsonl
 results/live_events_eval.jsonl
 results/daemon_dashboard.log
 results/log_daemon_live.txt
+results/deck_preview/
+
+# --- throwaway demo training runs (e.g. --name distilbert_abl_epochdemo / hgb_abl_epochdemo)
+*epochdemo*
+
+# --- screenshots for the deck (kept locally)
+screenshots/
 
 # --- local tooling / OS
 .claude/
@@ -26,3 +33,4 @@ results/log_daemon_live.txt
 Thumbs.db
 Desktop.ini
 .DS_Store
+~$*
